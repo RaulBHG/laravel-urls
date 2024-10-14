@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Src\Infrastructure\Repositories\LaravelLogRepository;
 use Illuminate\Support\Facades\Log;
+use Src\V1\Infrastructure\Repositories\LaravelLogRepository;
 
 uses(Tests\TestCase::class, RefreshDatabase::class);
 

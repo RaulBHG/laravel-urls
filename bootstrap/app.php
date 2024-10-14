@@ -4,9 +4,8 @@ use App\Http\Responses\BasicResponse;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Src\Infrastructure\Middlewares\B3PropagationMiddleware;
-use Src\Infrastructure\Middlewares\KeycloakMiddleware;
-use Src\Infrastructure\Middlewares\KeycloakRoleMiddleware;
+use Src\V1\Infrastructure\Middlewares\B3PropagationMiddleware;
+use Src\V1\Infrastructure\Middlewares\BearerTokenMiddleware;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -17,8 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'auth' => KeycloakMiddleware::class,
-            'role' => KeycloakRoleMiddleware::class
+            'auth' => BearerTokenMiddleware::class,
         ]);
         $middleware->group('api', [
             B3PropagationMiddleware::class,

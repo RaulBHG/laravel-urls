@@ -1,0 +1,106 @@
+openapi: '3.0.2'
+
+info:
+  title: API Kaira
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8181
+    description: Local
+
+
+components:
+  parameters:
+    AuthorizationHeader:
+      name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
+        example: Bearer testToken123
+    AcceptHeader:
+      name: Accept
+      in: header
+      description: Tipo de contenido aceptado, tiene que ser <b>application/json</b>.
+      required: true
+      schema:
+        type: string
+        example: application/json
+  responses:
+    UnauthorizedError:
+      description: En caso de usar un token incorrecto.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Error example"
+    InternalServerError:
+      description: Error interno.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Error example"
+    NotValidUrl:
+      description: Error en la url.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Error example"
+  schemas:
+    url:
+      description: La suscripción tiene un customer de stripe asociado y un plan.
+      type: object
+      properties:
+        url:
+          description: Url
+          type: string
+          example: https://exampleUrl.com
+tags:
+  - name: url
+    description: Acortar url
+
+paths:
+  '/api/v1/short-urls':
+    post:
+      tags:
+        - url
+      description: Acortar una url.
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/AcceptHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              allOf:
+                - $ref: '#/components/schemas/url'
+
+      responses:
+        '200':
+          description: Ok, url acortada con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/url'
+
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/NotValidUrl'
+        '400':
+          $ref: '#/components/responses/InternalServerError'

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Src\Domain\Contracts;
+namespace Src\V1\Domain\Contracts;
 
 use Exception;
 

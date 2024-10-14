@@ -1,10 +1,10 @@
 <?php
 
-namespace Src\Infrastructure\Repositories;
+namespace Src\V1\Infrastructure\Repositories;
 
 use Exception;
 use Illuminate\Support\Facades\Log;
-use Src\Domain\Contracts\LogRepositoryContract;
+use Src\V1\Domain\Contracts\LogRepositoryContract;
 
 final class LaravelLogRepository implements LogRepositoryContract
 {
