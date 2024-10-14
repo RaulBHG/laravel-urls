@@ -6,31 +6,41 @@ use App\Http\Responses\BasicResponse;
 use Closure;
 use Exception;
 use Illuminate\Http\Request;
-use Src\V1\Infrastructure\Repositories\LaravelLogRepository;
+use Illuminate\Support\Facades\Log;
+use Src\v1\Infrastructure\Services\ParenthesesProblemService;
 
-class BearerTokenMiddleware
+class ParenthesesProblemMiddleware
 {
 	public function __construct(
-		private LaravelLogRepository $log
+		private ParenthesesProblemService $parenthesesProblemService
 	) {}
 
     public function handle(Request $request, Closure $nextStep): mixed
     {
         try {
             $token = request()->bearerToken();
-
-			// TODO: Hardcoded token
-			if($token !== 'testToken123')
+			if($token === null){
 				return new BasicResponse(httpCode: 401, response: [
 					'error' => 'Unauthorized',
 				]);
+			}
+			$passTest = $this->parenthesesProblemService->solveParenthesesProblem($token);
+			if(!$passTest){
+				return new BasicResponse(httpCode: 401, response: [
+					'error' => 'Unauthorized',
+				]);
+			}
 
             return $nextStep($request);
         } catch (Exception $e) {
-            $this->log->error($e);
+            Log::error($e);
             return new BasicResponse(httpCode: 401, response: [
 				'error' => 'Unauthorized',
 			]);
         }
     }
+
+
+
+
 }
